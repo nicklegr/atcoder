@@ -1,0 +1,91 @@
+require 'pp'
+
+# http://0xcc.net/ruby-bsearch/index.html.ja
+# require './bsearch'
+
+# https://github.com/kanwei/algorithms
+# require 'rubygems'
+# require 'algorithms'
+# include Containers
+
+def ppd(*arg)
+  if $DEBUG
+    pp(*arg)
+  end
+end
+
+def putsd(*arg)
+  if $DEBUG
+    puts(*arg)
+  end
+end
+
+def ri
+  readline.to_i
+end
+
+def ris
+  readline.split.map do |e| e.to_i end
+end
+
+def rs
+  readline.chomp
+end
+
+def rss
+  readline.chomp.split
+end
+
+def rf
+  readline.to_f
+end
+
+def rfs
+  readline.split.map do |e| e.to_f end
+end
+
+def rws(count)
+  words = []
+  for i in 1 .. count
+    words << readline.chomp
+  end
+  words
+end
+
+a, b = rs.split('/')
+
+a = a.to_i
+b = b.to_i
+
+val = a.to_f / b
+
+i = 1
+n = 0
+
+upper = Math.sqrt(2 * val + 2)
+upper = upper.ceil.to_i
+
+loop do # while n <= upper
+  u = 2 * i * a
+  if u % b != 0
+    i += 1
+    next
+  end
+
+  n = u / b - 1
+  raise if n < 1
+pp n
+  # m = (n * (n+1) / 2 - val) * n
+  # m = (n * n * (n+1) / 2 - val * n)
+  u = a * n
+  if u % b != 0
+    i += 1
+    next
+  end
+
+  m = (n * n * (n+1) / 2 - a * n / b)
+
+#  puts "#{n} #{m}"
+
+  i += 1
+end

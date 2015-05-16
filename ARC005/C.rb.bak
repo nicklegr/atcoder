@@ -1,0 +1,108 @@
+require 'pp'
+
+# http://0xcc.net/ruby-bsearch/index.html.ja
+# require './bsearch'
+
+# https://github.com/kanwei/algorithms
+# require 'rubygems'
+# require 'algorithms'
+# include Containers
+
+def ppd(*arg)
+  if $DEBUG
+    pp(*arg)
+  end
+end
+
+def putsd(*arg)
+  if $DEBUG
+    puts(*arg)
+  end
+end
+
+def ri
+  readline.to_i
+end
+
+def ris
+  readline.split.map do |e| e.to_i end
+end
+
+def rs
+  readline.chomp
+end
+
+def rss
+  readline.chomp.split
+end
+
+def rf
+  readline.to_f
+end
+
+def rfs
+  readline.split.map do |e| e.to_f end
+end
+
+def rws(count)
+  words = []
+  for i in 1 .. count
+    words << readline.chomp
+  end
+  words
+end
+
+
+def solve(x, y, w, h, map, cs)
+  cur = cs[y][x]
+  raise if cur >= 3
+
+  for i in [-1, 0, +1]
+    for j in [-1, 0, +1]
+      next if i == j
+      next if y+i >= h || x+j >= w || y+i < 0 || x+j < 0
+#puts "#{x+j}, #{y+i}"
+      return true if map[y+i][x+j] == 'g'
+
+      if map[y+i][x+j] == '.' && (cs[y+i][x+j] == nil || cs[y+i][x+j] > cur)
+        cs[y+i][x+j] = cur
+        ret = solve(x+j, y+i, w, h, map, cs)
+        return true if ret
+      end
+
+      if map[y+i][x+j] == '#' && cur <= 1 && (cs[y+i][x+j] == nil || cs[y+i][x+j] > cur + 1)
+        cs[y+i][x+j] = cur + 1
+        ret = solve(x+j, y+i, w, h, map, cs)
+        return true if ret
+      end
+    end
+  end
+  
+  return false
+end
+
+
+h, w = ris
+map = rws(h)
+
+cs = []
+h.times do
+  cs << Array.new(w)
+end
+
+sx = sy = 0
+cs.each_with_index do |row, y|
+  row.each_with_index do |c, x|
+    if c == 's'
+      sx = x
+      sy = y
+    end
+  end
+end
+
+cs[sy][sx] = 0
+ret = solve(sx, sy, w, h, map, cs)
+
+# pp cs
+
+puts ret ? 'YES' : 'NO'
