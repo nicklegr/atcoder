@@ -152,10 +152,8 @@ parrd(route.map{|e| get(arr, e)})
     dec_list.reverse.each do |e|
       dec(arr, e)
     end
-  end
-
-parrd(route.map{|e| "[#{e[0]},#{e[1]}]"})
 parrd(route.map{|e| get(arr, e)})
+  end
 end
 
 def p_arr(arr)
@@ -220,6 +218,9 @@ putsd "turn: #{$turn}"
     break if $count == total
 
     cur = start(arr, LIMIT)
+    cur = start(arr, LIMIT/2)
+    # cur = start(arr, LIMIT/4)
+    # cur = start(arr, LIMIT/8)
     cur = start(arr, 1) if !cur
     break if !cur
 
@@ -227,11 +228,11 @@ putsd "turn: #{$turn}"
     # @todo 最初のやつを隣のやつ+1まで減らす
     # @todo 探索やらDPで最長を探す
     route = [cur]
-    th = get(arr, cur) - 1
+    th = get(arr, cur) - 5
     while th > 0
       cur = walk(arr, cur, th, route)
       if cur != nil
-        th -= 1
+        # th -= 1
         route << cur
       else
         break
@@ -251,7 +252,7 @@ putsd "------"
     end
   end
 
-putsd "turn: #{$turn} (best: 24225)"
+putsd "turn: #{$turn} (best: 22682)"
 
   # progress
   trigger = 
