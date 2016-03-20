@@ -111,7 +111,7 @@ def walk(arr, cur, th, route)
     in_field(e) && get(arr, e) >= th && !route.include?(e)
   end
 
-  n.sample
+  n.first
 end
 
 def p_arr(arr)
