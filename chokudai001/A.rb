@@ -217,10 +217,7 @@ putsd "turn: #{$turn}"
   loop do
     break if $count == total
 
-    cur = start(arr, LIMIT)
-    cur = start(arr, LIMIT/2)
-    # cur = start(arr, LIMIT/4)
-    # cur = start(arr, LIMIT/8)
+    cur = start(arr, 25)
     cur = start(arr, 1) if !cur
     break if !cur
 
