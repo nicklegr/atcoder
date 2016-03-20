@@ -114,10 +114,10 @@ end
 
 def walk(arr, cur, th, route)
   n = [
-    [cur[0]+1, cur[1]],
-    [cur[0], cur[1]+1],
     [cur[0]-1, cur[1]],
+    [cur[0]+1, cur[1]],
     [cur[0], cur[1]-1],
+    [cur[0], cur[1]+1],
   ]
   n.select! do |e|
     in_field(e) && get(arr, e) >= th && !route.include?(e)
