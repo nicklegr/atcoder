@@ -52,6 +52,45 @@ def rws(count)
   words
 end
 
+def get(arr, p)
+  arr[p[1]][p[0]]
+end
+
+def dec(arr, p)
+  arr[p[1]][p[0]] -= 1
+end
+
+def in_field(p)
+  x = p[0]
+  y = p[1]
+  0 <= x && x < 30 && 0 <= y && y < 30
+end
+
+def out(p)
+  puts "#{p[1]+1} #{p[0]+1}"
+end
+
+def reset(arr)
+  for y in 0...30
+    for x in 0...30
+      p = [x,y]
+      if get(arr, p) >= 1
+        # if x != 29
+          return [x,y]
+        # else
+        #   return [x-1,y]
+        # end
+      end
+    end
+  end
+end
+
+def p_arr(arr)
+  arr.each do |e|
+    print e.join(" ") + "\n"
+  end
+end
+
 # main
 t_start = Time.now
 
@@ -63,11 +102,66 @@ cases = 1
     arr << ris
   end
 
+  total = 0
+  for i in 0...30
+    total += arr[i].inject(:+)
+  end
+
+  cur = [0,0]
+  count = 0
+  loop do
+    break if count == total
+    x = cur[0]
+    y = cur[1]
+
+    cur = [x-1,y]
+    if in_field(cur) && get(arr, cur) >= 1
+      out(cur)
+      dec(arr, cur)
+      count += 1
+      next
+    end
+
+    cur = [x+1,y]
+    if in_field(cur) && get(arr, cur) >= 1
+      out(cur)
+      dec(arr, cur)
+      count += 1
+      next
+    end
+
+    cur = [x,y-1]
+    if in_field(cur) && get(arr, cur) >= 1
+      out(cur)
+      dec(arr, cur)
+      count += 1
+      next
+    end
+
+    cur = [x,y+1]
+    if in_field(cur) && get(arr, cur) >= 1
+      out(cur)
+      dec(arr, cur)
+      count += 1
+      next
+    end
+
+    cur = [x,y]
+    if in_field(cur) && get(arr, cur) >= 1
+      out(cur)
+      dec(arr, cur)
+      count += 1
+      next
+    end
+
+    # reset
+    cur = reset(arr)
+  end
+
+  # check
   for y in 0...30
     for x in 0...30
-      arr[y][x].times do
-        puts "#{y+1} #{x+1}"
-      end
+      raise if get(arr, [x,y]) != 0
     end
   end
 
