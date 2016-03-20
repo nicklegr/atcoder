@@ -125,7 +125,7 @@ def walk(arr, cur, th, route)
     in_field(e) && get(arr, e) >= th && !route.include?(e)
   end
 
-  n.first
+  n.sample
 end
 
 def decrement(arr, route, target)
@@ -154,6 +154,32 @@ parrd(route.map{|e| get(arr, e)})
     end
 parrd(route.map{|e| get(arr, e)})
   end
+end
+
+def route_a_in(arr, cur)
+  route = [cur]
+  th = get(arr, cur) - 1
+  while th > LIMIT
+    cur = walk(arr, cur, th, route)
+    if cur != nil
+      th -= 1
+      route << cur
+    else
+      break
+    end
+  end
+  route
+end
+
+def route_a(arr, cur)
+  ret = []
+  1000.times do
+    c = route_a_in(arr, cur)
+    if ret.size < c.size
+      ret = c
+    end
+  end
+  ret
 end
 
 def p_arr(arr)
@@ -193,17 +219,7 @@ cases = 1
     # ルートを延ばす
     # @todo 最初のやつを隣のやつ+1まで減らす
     # @todo 探索やらDPで最長を探す
-    route = [cur]
-    th = get(arr, cur) - 1
-    while th > LIMIT
-      cur = walk(arr, cur, th, route)
-      if cur != nil
-        th -= 1
-        route << cur
-      else
-        break
-      end
-    end
+    route = route_a(arr, cur)
 
     decrement(arr, route, LIMIT)
 
