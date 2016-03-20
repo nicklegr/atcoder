@@ -85,9 +85,23 @@ def reset(arr)
   end
 end
 
+def walk(arr, cur)
+  n = [
+    [cur[0]-1, cur[1]],
+    [cur[0]+1, cur[1]],
+    [cur[0], cur[1]-1],
+    [cur[0], cur[1]+1],
+  ]
+  n.select! do |e|
+    in_field(e) && get(arr, e) >= 1
+  end
+
+  n.sample
+end
+
 def p_arr(arr)
   arr.each do |e|
-    print e.join(" ") + "\n"
+    STDERR.print e.join(" ") + "\n"
   end
 end
 
@@ -107,6 +121,7 @@ cases = 1
     total += arr[i].inject(:+)
   end
 
+  turn = 0
   cur = [0,0]
   count = 0
   loop do
@@ -114,37 +129,16 @@ cases = 1
     x = cur[0]
     y = cur[1]
 
-    cur = [x-1,y]
-    if in_field(cur) && get(arr, cur) >= 1
+    cur = walk(arr, cur)
+    if cur != nil
       out(cur)
       dec(arr, cur)
       count += 1
       next
     end
 
-    cur = [x+1,y]
-    if in_field(cur) && get(arr, cur) >= 1
-      out(cur)
-      dec(arr, cur)
-      count += 1
-      next
-    end
-
-    cur = [x,y-1]
-    if in_field(cur) && get(arr, cur) >= 1
-      out(cur)
-      dec(arr, cur)
-      count += 1
-      next
-    end
-
-    cur = [x,y+1]
-    if in_field(cur) && get(arr, cur) >= 1
-      out(cur)
-      dec(arr, cur)
-      count += 1
-      next
-    end
+turn += 1
+# p_arr(arr)
 
     cur = [x,y]
     if in_field(cur) && get(arr, cur) >= 1
@@ -164,6 +158,8 @@ cases = 1
       raise if get(arr, [x,y]) != 0
     end
   end
+
+  STDERR.puts "turn: #{turn}"
 
   # progress
   trigger = 
