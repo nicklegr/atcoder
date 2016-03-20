@@ -129,17 +129,37 @@ def walk(arr, cur, th, route)
 end
 
 def make_dec_array(arr, route)
+parrd(route.map{|e| "[#{e[0]},#{e[1]}]"})
+parrd(route.map{|e| get(arr, e)})
+
   # 1ずつ減っていくように事前に減らす
-  # @todo 後ろから連番でやった方が効率いい
   th = get(arr, route.first)
-  route.each do |e|
-    t = get(arr, e) - th
-    raise unless t >= 0
-    t.times do
+  target = th - (route.size - 1)
+
+  r_route = route.reverse
+
+  loop do
+    if get(arr, r_route.first) == target
+      r_route.shift
+    end
+
+    break if r_route.empty?
+
+    dec_list = []
+    cur = get(arr, r_route.first)
+    r_route.each do |e|
+      break if get(arr, e) != cur
+      dec_list << e
+      cur += 1
+    end
+
+    dec_list.reverse.each do |e|
       dec(arr, e)
     end
-    th -= 1
   end
+
+parrd(route.map{|e| "[#{e[0]},#{e[1]}]"})
+parrd(route.map{|e| get(arr, e)})
 end
 
 def p_arr(arr)
@@ -194,8 +214,8 @@ cases = 1
     make_dec_array(arr, route)
 
     # 連番処理(最後から順に0になる。最初が0になったら終了)
-parrd(route.map{|e| "[#{e[0]},#{e[1]}]"})
-parrd(route.map{|e| get(arr, e)})
+# parrd(route.map{|e| "[#{e[0]},#{e[1]}]"})
+# parrd(route.map{|e| get(arr, e)})
     loop do
       deced = false
       route.each do |e|
@@ -240,8 +260,8 @@ putsd "turn: #{$turn}"
     make_dec_array(arr, route)
 
     # 連番処理(最後から順に0になる。最初が0になったら終了)
-parrd(route.map{|e| "[#{e[0]},#{e[1]}]"})
-parrd(route.map{|e| get(arr, e)})
+# parrd(route.map{|e| "[#{e[0]},#{e[1]}]"})
+# parrd(route.map{|e| get(arr, e)})
     loop do
       deced = false
       route.each do |e|
@@ -265,7 +285,7 @@ putsd "------"
     end
   end
 
-putsd "turn: #{$turn}"
+putsd "turn: #{$turn} (best: 24225)"
 
   # progress
   trigger = 
