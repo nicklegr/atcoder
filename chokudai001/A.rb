@@ -139,13 +139,23 @@ cases = 1
     total += arr[i].inject(:+)
   end
 
-  # 50以上のマスを50に揃える
+  # 30: 33252
+  # 40: 28547
+  # 45: 27538
+  # 50: 26987
+  # 51: 27013
+  # 55: 26653
+  # 60: 27564
+  # 70: 29052
+  LIMIT = 50
+
+  # LIMIT以上のマスをLIMITに揃える
   for y in 0...30
     for x in 0...30
       p = [x,y]
       v = get(arr, p)
-      if v >= 51
-        (v-50).times do
+      if v > LIMIT
+        (v-LIMIT).times do
           dec(arr, p)
         end
       end
@@ -157,7 +167,7 @@ p_arr(arr)
   loop do
     break if $count == total
 
-    cur = start(arr, 50)
+    cur = start(arr, LIMIT)
     cur = start(arr, 1) if !cur
     break if !cur
 
