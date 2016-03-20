@@ -102,10 +102,10 @@ end
 
 def walk(arr, cur, th, route)
   n = [
-    [cur[0]-1, cur[1]],
     [cur[0]+1, cur[1]],
-    [cur[0], cur[1]-1],
     [cur[0], cur[1]+1],
+    [cur[0]-1, cur[1]],
+    [cur[0], cur[1]-1],
   ]
   n.select! do |e|
     in_field(e) && get(arr, e) >= th && !route.include?(e)
@@ -139,14 +139,6 @@ cases = 1
     total += arr[i].inject(:+)
   end
 
-  # 30: 33252
-  # 40: 28547
-  # 45: 27538
-  # 50: 26987
-  # 51: 27013
-  # 55: 26653
-  # 60: 27564
-  # 70: 29052
   LIMIT = 50
 
   # LIMIT以上のマスをLIMITに揃える
@@ -154,9 +146,13 @@ cases = 1
   for y in 0...30
     for x in 0...30
       p = [x,y]
+
+      limit = LIMIT # - (x+y)
+      next if limit < 0
+
       v = get(arr, p)
-      if v > LIMIT
-        (v-LIMIT).times do
+      if v > limit
+        (v-limit).times do
           dec(arr, p)
         end
       end
@@ -164,6 +160,7 @@ cases = 1
   end
 
 p_arr(arr)
+putsd "turn: #{$turn}"
 
   loop do
     break if $count == total
