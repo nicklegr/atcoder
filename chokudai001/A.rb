@@ -128,13 +128,9 @@ def walk(arr, cur, th, route)
   n.first
 end
 
-def make_dec_array(arr, route)
+def decrement(arr, route, target)
 parrd(route.map{|e| "[#{e[0]},#{e[1]}]"})
 parrd(route.map{|e| get(arr, e)})
-
-  # 1ずつ減っていくように事前に減らす
-  th = get(arr, route.first)
-  target = th - (route.size - 1)
 
   r_route = route.reverse
 
@@ -211,22 +207,7 @@ cases = 1
       end
     end
 
-    make_dec_array(arr, route)
-
-    # 連番処理(最後から順に0になる。最初が0になったら終了)
-# parrd(route.map{|e| "[#{e[0]},#{e[1]}]"})
-# parrd(route.map{|e| get(arr, e)})
-    loop do
-      deced = false
-      route.each do |e|
-        raise if get(arr, e) < LIMIT
-        if get(arr, e) > LIMIT
-          dec(arr, e)
-          deced = true
-        end
-      end
-      break if !deced
-    end
+    decrement(arr, route, LIMIT)
 
 putsd "------"
 # p_arr(arr)
@@ -257,22 +238,7 @@ putsd "turn: #{$turn}"
       end
     end
 
-    make_dec_array(arr, route)
-
-    # 連番処理(最後から順に0になる。最初が0になったら終了)
-# parrd(route.map{|e| "[#{e[0]},#{e[1]}]"})
-# parrd(route.map{|e| get(arr, e)})
-    loop do
-      deced = false
-      route.each do |e|
-        raise if get(arr, e) < 0
-        if get(arr, e) > 0
-          dec(arr, e)
-          deced = true
-        end
-      end
-      break if !deced
-    end
+    decrement(arr, route, 0)
 
 putsd "------"
 # p_arr(arr)
