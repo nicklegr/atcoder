@@ -1,5 +1,7 @@
 require 'pp'
 
+$count = 0
+
 def ppd(*arg)
   if $DEBUG
     pp(*arg)
@@ -52,12 +54,19 @@ def rws(count)
   words
 end
 
+def out(p)
+  puts "#{p[1]+1} #{p[0]+1}"
+end
+
 def get(arr, p)
   arr[p[1]][p[0]]
 end
 
 def dec(arr, p)
+  out(p)
+  raise unless arr[p[1]][p[0]] > 0
   arr[p[1]][p[0]] -= 1
+  $count += 1
 end
 
 def in_field(p)
@@ -66,26 +75,19 @@ def in_field(p)
   0 <= x && x < 30 && 0 <= y && y < 30
 end
 
-def out(p)
-  puts "#{p[1]+1} #{p[0]+1}"
-end
-
 def reset(arr)
   for y in 0...30
     for x in 0...30
       p = [x,y]
       if get(arr, p) >= 1
-        # if x != 29
-          return [x,y]
-        # else
-        #   return [x-1,y]
-        # end
+        return [x,y]
       end
     end
   end
+  nil
 end
 
-def walk(arr, cur)
+def walk(arr, cur, th, route)
   n = [
     [cur[0]-1, cur[1]],
     [cur[0]+1, cur[1]],
@@ -93,7 +95,7 @@ def walk(arr, cur)
     [cur[0], cur[1]+1],
   ]
   n.select! do |e|
-    in_field(e) && get(arr, e) >= 1
+    in_field(e) && get(arr, e) >= th && !route.include?(e)
   end
 
   n.sample
@@ -122,34 +124,48 @@ cases = 1
   end
 
   turn = 0
-  cur = [0,0]
-  count = 0
+  $count = 0
   loop do
-    break if count == total
-    x = cur[0]
-    y = cur[1]
+    break if $count == total
 
-    cur = walk(arr, cur)
-    if cur != nil
-      out(cur)
-      dec(arr, cur)
-      count += 1
-      next
-    end
-
-turn += 1
-# p_arr(arr)
-
-    cur = [x,y]
-    if in_field(cur) && get(arr, cur) >= 1
-      out(cur)
-      dec(arr, cur)
-      count += 1
-      next
-    end
-
-    # reset
     cur = reset(arr)
+    break if !cur
+
+    # ルートを延ばす
+    route = [cur]
+    th = get(arr, cur) - 1
+    while th > 0
+      cur = walk(arr, cur, th, route)
+      if cur != nil
+        th -= 1
+        route << cur
+      else
+        break
+      end
+    end
+
+    # 1ずつ減っていくように事前に減らす
+    th = get(arr, route.first)
+    route.each do |e|
+      t = get(arr, e) - th
+      raise unless t >= 0
+      t.times do
+        dec(arr, e)
+      end
+      th -= 1
+    end
+
+    # 連番処理(0になったらスキップ)
+    loop do
+      deced = false
+      route.each do |e|
+        if get(arr, e) > 0
+          dec(arr, e)
+          deced = true
+        end
+      end
+      break if !deced
+    end
   end
 
   # check
@@ -159,7 +175,7 @@ turn += 1
     end
   end
 
-  STDERR.puts "turn: #{turn}"
+  # STDERR.puts "turn: #{turn}"
 
   # progress
   trigger = 
