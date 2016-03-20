@@ -128,6 +128,20 @@ def walk(arr, cur, th, route)
   n.first
 end
 
+def make_dec_array(arr, route)
+  # 1ずつ減っていくように事前に減らす
+  # @todo 後ろから連番でやった方が効率いい
+  th = get(arr, route.first)
+  route.each do |e|
+    t = get(arr, e) - th
+    raise unless t >= 0
+    t.times do
+      dec(arr, e)
+    end
+    th -= 1
+  end
+end
+
 def p_arr(arr)
   arr.each do |e|
     putsd e.map{|v| sprintf("%2d", v) }.join(" ")
@@ -177,16 +191,7 @@ cases = 1
       end
     end
 
-    # 1ずつ減っていくように事前に減らす
-    th = get(arr, route.first)
-    route.each do |e|
-      t = get(arr, e) - th
-      raise unless t >= 0
-      t.times do
-        dec(arr, e)
-      end
-      th -= 1
-    end
+    make_dec_array(arr, route)
 
     # 連番処理(最後から順に0になる。最初が0になったら終了)
 parrd(route.map{|e| "[#{e[0]},#{e[1]}]"})
@@ -232,16 +237,7 @@ putsd "turn: #{$turn}"
       end
     end
 
-    # 1ずつ減っていくように事前に減らす
-    th = get(arr, route.first)
-    route.each do |e|
-      t = get(arr, e) - th
-      raise unless t >= 0
-      t.times do
-        dec(arr, e)
-      end
-      th -= 1
-    end
+    make_dec_array(arr, route)
 
     # 連番処理(最後から順に0になる。最初が0になったら終了)
 parrd(route.map{|e| "[#{e[0]},#{e[1]}]"})
