@@ -57,7 +57,9 @@ def rws(count)
 end
 
 def out(p)
-  puts "#{p[1]+1} #{p[0]+1}"
+  if !$DEBUG
+    puts "#{p[1]+1} #{p[0]+1}"
+  end
 end
 
 def get(arr, p)
