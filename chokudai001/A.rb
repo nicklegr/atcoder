@@ -116,7 +116,7 @@ end
 
 def p_arr(arr)
   arr.each do |e|
-    STDERR.print e.join(" ") + "\n"
+    putsd e.join(" ")
   end
 end
 
@@ -179,6 +179,9 @@ cases = 1
       end
       break if !deced
     end
+
+putsd "------"
+p_arr(arr)
   end
 
   # check
@@ -188,7 +191,7 @@ cases = 1
     end
   end
 
-  STDERR.puts "turn: #{$turn}"
+putsd "turn: #{$turn}"
 
   # progress
   trigger = 
