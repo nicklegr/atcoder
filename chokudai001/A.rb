@@ -100,6 +100,18 @@ def start(arr, th)
   nil
 end
 
+def start_once(arr, th, used)
+  for y in 0...30
+    for x in 0...30
+      p = [x,y]
+      if get(arr, p) >= th && !used.key?(p)
+        return [x,y]
+      end
+    end
+  end
+  nil
+end
+
 def walk(arr, cur, th, route)
   n = [
     [cur[0]+1, cur[1]],
@@ -142,21 +154,55 @@ cases = 1
   LIMIT = 50
 
   # LIMIT以上のマスをLIMITに揃える
-  # @todo ここも連番でやれば稼げる
-  for y in 0...30
-    for x in 0...30
-      p = [x,y]
+  start_used = {}
+  loop do
+    cur = start_once(arr, LIMIT, start_used)
+    start_used[cur] = 1
+    break if !cur
 
-      limit = LIMIT # - (x+y)
-      next if limit < 0
-
-      v = get(arr, p)
-      if v > limit
-        (v-limit).times do
-          dec(arr, p)
-        end
+    # ルートを延ばす
+    # @todo 最初のやつを隣のやつ+1まで減らす
+    # @todo 探索やらDPで最長を探す
+    route = [cur]
+    th = get(arr, cur) - 1
+    while th > LIMIT
+      cur = walk(arr, cur, th, route)
+      if cur != nil
+        th -= 1
+        route << cur
+      else
+        break
       end
     end
+
+    # 1ずつ減っていくように事前に減らす
+    th = get(arr, route.first)
+    route.each do |e|
+      t = get(arr, e) - th
+      raise unless t >= 0
+      t.times do
+        dec(arr, e)
+      end
+      th -= 1
+    end
+
+    # 連番処理(最後から順に0になる。最初が0になったら終了)
+parrd(route.map{|e| "[#{e[0]},#{e[1]}]"})
+parrd(route.map{|e| get(arr, e)})
+    loop do
+      deced = false
+      route.each do |e|
+        raise if get(arr, e) < LIMIT
+        if get(arr, e) > LIMIT
+          dec(arr, e)
+          deced = true
+        end
+      end
+      break if !deced
+    end
+
+putsd "------"
+# p_arr(arr)
   end
 
 p_arr(arr)
