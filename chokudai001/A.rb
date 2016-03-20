@@ -57,7 +57,7 @@ def rws(count)
 end
 
 def out(p)
-  puts "#{p[1]+1} #{p[0]+1}"
+  # puts "#{p[1]+1} #{p[0]+1}"
 end
 
 def get(arr, p)
@@ -168,10 +168,13 @@ cases = 1
       th -= 1
     end
 
-    # 連番処理(0になったらスキップ)
+    # 連番処理(最後から順に0になる。最初が0になったら終了)
+parrd(route.map{|e| "[#{e[0]},#{e[1]}]"})
+parrd(route.map{|e| get(arr, e)})
     loop do
       deced = false
       route.each do |e|
+        raise if get(arr, e) < 0
         if get(arr, e) > 0
           dec(arr, e)
           deced = true
@@ -181,7 +184,7 @@ cases = 1
     end
 
 putsd "------"
-p_arr(arr)
+# p_arr(arr)
   end
 
   # check
