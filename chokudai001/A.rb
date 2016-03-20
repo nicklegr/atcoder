@@ -116,7 +116,7 @@ end
 
 def p_arr(arr)
   arr.each do |e|
-    putsd e.join(" ")
+    putsd e.map{|v| sprintf("%2d", v) }.join(" ")
   end
 end
 
@@ -150,6 +150,7 @@ cases = 1
   LIMIT = 50
 
   # LIMIT以上のマスをLIMITに揃える
+  # @todo ここも連番でやれば稼げる
   for y in 0...30
     for x in 0...30
       p = [x,y]
@@ -172,6 +173,8 @@ p_arr(arr)
     break if !cur
 
     # ルートを延ばす
+    # @todo 最初のやつを隣のやつ+1まで減らす
+    # @todo 探索やらDPで最長を探す
     route = [cur]
     th = get(arr, cur) - 1
     while th > 0
