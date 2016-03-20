@@ -1,6 +1,8 @@
 require 'pp'
 
 $count = 0
+$last = nil
+$turn = 0
 
 def ppd(*arg)
   if $DEBUG
@@ -63,8 +65,19 @@ def get(arr, p)
 end
 
 def dec(arr, p)
-  out(p)
   raise unless arr[p[1]][p[0]] > 0
+
+  if $last
+    if ($last[0][0] - p[0]).abs + ($last[0][1] - p[1]).abs == 1 &&
+      $last[1] - 1 == arr[p[1]][p[0]]
+      # 同一ターン
+    else
+      $turn += 1
+    end
+  end
+  $last = [p, arr[p[1]][p[0]]]
+
+  out(p)
   arr[p[1]][p[0]] -= 1
   $count += 1
 end
@@ -123,7 +136,7 @@ cases = 1
     total += arr[i].inject(:+)
   end
 
-  turn = 0
+  $turn = 0
   $count = 0
   loop do
     break if $count == total
@@ -175,7 +188,7 @@ cases = 1
     end
   end
 
-  # STDERR.puts "turn: #{turn}"
+  STDERR.puts "turn: #{$turn}"
 
   # progress
   trigger = 
