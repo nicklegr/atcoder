@@ -57,7 +57,7 @@ def rws(count)
 end
 
 def out(p)
-  # puts "#{p[1]+1} #{p[0]+1}"
+  puts "#{p[1]+1} #{p[0]+1}"
 end
 
 def get(arr, p)
@@ -88,11 +88,11 @@ def in_field(p)
   0 <= x && x < 30 && 0 <= y && y < 30
 end
 
-def reset(arr)
+def start(arr, th)
   for y in 0...30
     for x in 0...30
       p = [x,y]
-      if get(arr, p) >= 1
+      if get(arr, p) >= th
         return [x,y]
       end
     end
@@ -126,6 +126,9 @@ t_start = Time.now
 cases = 1
 
 (1 .. cases).each do |case_index|
+  $turn = 0
+  $count = 0
+
   arr = []
   30.times do
     arr << ris
@@ -136,12 +139,26 @@ cases = 1
     total += arr[i].inject(:+)
   end
 
-  $turn = 0
-  $count = 0
+  # 50以上のマスを50に揃える
+  for y in 0...30
+    for x in 0...30
+      p = [x,y]
+      v = get(arr, p)
+      if v >= 51
+        (v-50).times do
+          dec(arr, p)
+        end
+      end
+    end
+  end
+
+p_arr(arr)
+
   loop do
     break if $count == total
 
-    cur = reset(arr)
+    cur = start(arr, 50)
+    cur = start(arr, 1) if !cur
     break if !cur
 
     # ルートを延ばす
